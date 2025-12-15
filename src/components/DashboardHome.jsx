@@ -30,47 +30,32 @@ const DashboardHome = ({ onReadMoreClick }) => {
             });
             
             console.log('📥 Response status:', response.status);
-            console.log('📥 Response OK?', response.ok);
             
-            // Check content type
-            const contentType = response.headers.get('content-type');
-            console.log('📥 Content-Type:', contentType);
-            
-            // First, get the response as text to see what we're getting
+            // First get response as text to check what we're receiving
             const responseText = await response.text();
-            console.log('📥 Raw response (first 500 chars):', responseText.substring(0, 500));
+            console.log('📥 Response first 200 chars:', responseText.substring(0, 200));
             
-            // Check if it's HTML
-            if (contentType && contentType.includes('text/html')) {
+            // Check if response is HTML (error)
+            if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
                 console.error('❌ ERROR: Server returned HTML instead of JSON');
                 
-                // Check if it's an ngrok error page
+                // Check common HTML error pages
                 if (responseText.includes('ngrok')) {
-                    throw new Error('Ngrok tunnel error. Check if ngrok is running and backend server is active.');
+                    throw new Error('Ngrok tunnel error. Make sure ngrok is running with: ngrok http 5000');
+                }
+                if (responseText.includes('404')) {
+                    throw new Error('API endpoint not found (404). Check if backend server is running.');
                 }
                 
-                // Check if it's a 404 page
-                if (responseText.includes('404') || responseText.includes('Not Found')) {
-                    throw new Error('API endpoint not found (404). Check the URL.');
-                }
-                
-                throw new Error(`Server returned HTML: ${responseText.substring(0, 200)}...`);
+                throw new Error('Server returned HTML error page. Check server logs.');
             }
             
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
-            // Try to parse as JSON
-            let data;
-            try {
-                data = JSON.parse(responseText);
-            } catch (parseError) {
-                console.error('❌ JSON parse error:', parseError);
-                console.error('❌ Response that failed to parse:', responseText);
-                throw new Error('Invalid JSON response from server');
-            }
-            
+            // Parse JSON
+            const data = JSON.parse(responseText);
             console.log('✅ Popular venue received:', data);
             
             setPopularVenue(data);
@@ -98,6 +83,7 @@ const DashboardHome = ({ onReadMoreClick }) => {
         }
     };
 
+    // Rest of your component remains the same...
     const handleReadMore = () => {
         if (popularVenue && onReadMoreClick) {
             console.log('📍 Read More clicked for venue:', popularVenue.id, popularVenue.name);
@@ -147,7 +133,9 @@ const DashboardHome = ({ onReadMoreClick }) => {
                     <div className="error">
                         <p>Error: {error}</p>
                         <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
-                            Using fallback venue data. Make sure your backend server is running and ngrok is active.
+                            Using fallback venue data. Make sure:
+                            <br />1. Backend server is running: <code>node server.js</code>
+                            <br />2. Ngrok is running: <code>ngrok http 5000</code>
                         </p>
                     </div>
                 ) : popularVenue ? (
