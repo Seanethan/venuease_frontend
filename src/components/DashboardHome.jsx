@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './css/LandingPage.css';
-import bannerImage from './css/venueeventbanner.jpg'; // Import the image
+import bannerImage from './css/venueeventbanner.jpg';
 
 const DashboardHome = ({ onReadMoreClick }) => {
     const [popularVenue, setPopularVenue] = useState(null);
@@ -13,20 +13,72 @@ const DashboardHome = ({ onReadMoreClick }) => {
 
     const fetchPopularVenue = async () => {
         try {
-            console.log('🔄 Fetching popular venue...');
-            const response = await fetch('https://hipolito-semimoderate-kandy.ngrok-free.dev/api/venues/popular');
+            setLoading(true);
+            setError(null);
             
-            if (!response.ok) {
-                throw new Error(`Failed to fetch: ${response.status}`);
+            console.log('🔄 Fetching popular venue...');
+            const API_URL = 'https://hipolito-semimoderate-kandy.ngrok-free.dev/api/venues/popular';
+            console.log('📡 Request URL:', API_URL);
+            
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors'
+            });
+            
+            console.log('📥 Response status:', response.status);
+            console.log('📥 Response OK?', response.ok);
+            
+            // Check content type
+            const contentType = response.headers.get('content-type');
+            console.log('📥 Content-Type:', contentType);
+            
+            // First, get the response as text to see what we're getting
+            const responseText = await response.text();
+            console.log('📥 Raw response (first 500 chars):', responseText.substring(0, 500));
+            
+            // Check if it's HTML
+            if (contentType && contentType.includes('text/html')) {
+                console.error('❌ ERROR: Server returned HTML instead of JSON');
+                
+                // Check if it's an ngrok error page
+                if (responseText.includes('ngrok')) {
+                    throw new Error('Ngrok tunnel error. Check if ngrok is running and backend server is active.');
+                }
+                
+                // Check if it's a 404 page
+                if (responseText.includes('404') || responseText.includes('Not Found')) {
+                    throw new Error('API endpoint not found (404). Check the URL.');
+                }
+                
+                throw new Error(`Server returned HTML: ${responseText.substring(0, 200)}...`);
             }
             
-            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            // Try to parse as JSON
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('❌ JSON parse error:', parseError);
+                console.error('❌ Response that failed to parse:', responseText);
+                throw new Error('Invalid JSON response from server');
+            }
+            
             console.log('✅ Popular venue received:', data);
             
             setPopularVenue(data);
+            
         } catch (err) {
-            console.error('❌ Error:', err);
+            console.error('❌ Error fetching popular venue:', err);
             setError(err.message);
+            
             // Set fallback venue for testing
             setPopularVenue({
                 id: 1,
@@ -35,8 +87,11 @@ const DashboardHome = ({ onReadMoreClick }) => {
                 capacity: 500,
                 price_per_hour: 2999,
                 location: 'Downtown',
-                image: 'https://via.placeholder.com/800x400?text=Sample+Venue+Image',
-                booking_count: 0
+                image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+                booking_count: 15,
+                address: '123 Main Street, City Center',
+                contact_email: 'info@grandballroom.com',
+                contact_phone: '+63 912 345 6789'
             });
         } finally {
             setLoading(false);
@@ -66,7 +121,7 @@ const DashboardHome = ({ onReadMoreClick }) => {
 
     return (
         <div className="tab-content active">
-            {/* Hero / Banner - UPDATED WITH YOUR IMAGE */}
+            {/* Hero / Banner */}
             <div className="home-hero">
                 <img
                     src={bannerImage}
@@ -89,7 +144,12 @@ const DashboardHome = ({ onReadMoreClick }) => {
                 {loading ? (
                     <div className="loading">Loading popular venue...</div>
                 ) : error ? (
-                    <div className="error">Error: {error}</div>
+                    <div className="error">
+                        <p>Error: {error}</p>
+                        <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
+                            Using fallback venue data. Make sure your backend server is running and ngrok is active.
+                        </p>
+                    </div>
                 ) : popularVenue ? (
                     <div className="popular-venue">
                         {/* Left Image */}
