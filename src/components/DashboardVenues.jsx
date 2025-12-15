@@ -54,14 +54,14 @@ const DashboardVenues = ({ selectedVenue, selectedVenueId, startBooking, onBackT
         }
     };
 
-    // Helper function to get full image URL
+    // CORRECT Helper function to get full image URL (from first version)
     const getFullImageUrl = (imagePath) => {
         if (!imagePath) return 'https://via.placeholder.com/800x400?text=No+Image';
         if (imagePath.startsWith('http')) return imagePath;
         if (imagePath.startsWith('/uploads/')) {
-            return `https://hipolito-semimoderate-kandy.ngrok-free.dev${imagePath}`;
+            return `http://localhost:5000${imagePath}`;  // CORRECT: single protocol
         }
-        return `https://hipolito-semimoderate-kandy.ngrok-free.dev/uploads/venues/${imagePath}`;
+        return `http://localhost:5000/uploads/venues/${imagePath}`;
     };
 
     const handleBackToOffers = () => {
