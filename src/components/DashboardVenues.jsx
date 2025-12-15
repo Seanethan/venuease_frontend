@@ -23,7 +23,7 @@ const DashboardVenues = ({ selectedVenue, selectedVenueId, startBooking, onBackT
             setError(null);
             
             console.log(`Fetching venue details for ID: ${venueId}`);
-            const response = await axios.get(`hipolito-semimoderate-kandy.ngrok-free.dev/api/venues/${venueId}`);
+            const response = await axios.get(`https://hipolito-semimoderate-kandy.ngrok-free.dev/api/venues/${venueId}`);
             
             // Transform the data for display
             const transformedVenue = {
@@ -59,9 +59,9 @@ const DashboardVenues = ({ selectedVenue, selectedVenueId, startBooking, onBackT
         if (!imagePath) return 'https://via.placeholder.com/800x400?text=No+Image';
         if (imagePath.startsWith('http')) return imagePath;
         if (imagePath.startsWith('/uploads/')) {
-            return `hipolito-semimoderate-kandy.ngrok-free.dev${imagePath}`;
+            return `https://hipolito-semimoderate-kandy.ngrok-free.dev${imagePath}`;
         }
-        return `hipolito-semimoderate-kandy.ngrok-free.dev/uploads/venues/${imagePath}`;
+        return `https://hipolito-semimoderate-kandy.ngrok-free.dev/uploads/venues/${imagePath}`;
     };
 
     const handleBackToOffers = () => {
