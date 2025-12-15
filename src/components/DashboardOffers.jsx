@@ -34,7 +34,7 @@ const DashboardOffers = ({ handleBookNow }) => {
             setError(null);
 
             // Fetch from backend API
-            const response = await axios.get('https://hipolito-semimoderate-kandy.ngrok-free.dev/api/venues');
+            const response = await axios.get('hipolito-semimoderate-kandy.ngrok-free.dev/api/venues');
 
             console.log('API Response:', response.data); // Debug log
 
@@ -45,9 +45,9 @@ const DashboardOffers = ({ handleBookNow }) => {
                     if (!imagePath) return 'https://via.placeholder.com/400x250?text=No+Image';
                     if (imagePath.startsWith('http')) return imagePath;
                     if (imagePath.startsWith('/uploads/')) {
-                        return `https://hipolito-semimoderate-kandy.ngrok-free.dev${imagePath}`;
+                        return `hipolito-semimoderate-kandy.ngrok-free.dev${imagePath}`;
                     }
-                    return `https://hipolito-semimoderate-kandy.ngrok-free.dev/uploads/venues/${imagePath}`;
+                    return `hipolito-semimoderate-kandy.ngrok-free.dev/uploads/venues/${imagePath}`;
                 };
 
                 // Get all images as full URLs

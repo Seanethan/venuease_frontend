@@ -47,7 +47,7 @@ const Register = ({ switchToLogin, switchToLanding }) => {
 
             console.log('🔄 Sending registration:', userData);
 
-            const response = await axios.post('https://hipolito-semimoderate-kandy.ngrok-free.dev/api/customer/register', userData);
+            const response = await axios.post('hipolito-semimoderate-kandy.ngrok-free.dev/api/customer/register', userData);
             
             console.log('✅ Registration successful:', response.data);
             

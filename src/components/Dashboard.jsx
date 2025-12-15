@@ -45,7 +45,7 @@ const Dashboard = ({ user, onLogout }) => {
     const fetchVenueDetails = async (venueId) => {
         try {
             console.log(`📥 Fetching details for venue ID: ${venueId}`);
-            const response = await axios.get(`https://hipolito-semimoderate-kandy.ngrok-free.dev/api/venues/${venueId}`);
+            const response = await axios.get(`hipolito-semimoderate-kandy.ngrok-free.dev/api/venues/${venueId}`);
             console.log('Venue details fetched:', response.data);
             setSelectedVenueData(response.data);
         } catch (error) {
