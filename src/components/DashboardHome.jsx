@@ -14,7 +14,7 @@ const DashboardHome = ({ onReadMoreClick }) => {
     const fetchPopularVenue = async () => {
         try {
             console.log('🔄 Fetching popular venue...');
-            const response = await fetch('http://localhost:5000/api/venues/popular');
+            const response = await fetch('https://hipolito-semimoderate-kandy.ngrok-free.dev/api/venues/popular');
             
             if (!response.ok) {
                 throw new Error(`Failed to fetch: ${response.status}`);

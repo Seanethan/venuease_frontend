@@ -26,7 +26,7 @@ const Login = ({ switchToRegister, switchToLanding, onLogin }) => {
         try {
             console.log('🔄 Attempting login:', { email: formData.email });
             
-            const response = await axios.post('http://localhost:5000/api/customer/login', formData);
+            const response = await axios.post('https://hipolito-semimoderate-kandy.ngrok-free.dev/api/customer/login', formData);
             
             console.log('✅ Login successful:', response.data);
             onLogin(response.data.user);
