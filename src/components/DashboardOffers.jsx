@@ -33,14 +33,14 @@ const DashboardOffers = ({ handleBookNow }) => {
             setLoading(true);
             setError(null);
 
-            // Fetch from backend API
+            // Fetch from backend API - USING NGROK URL
             const response = await axios.get('https://hipolito-semimoderate-kandy.ngrok-free.dev/api/venues');
 
             console.log('API Response:', response.data); // Debug log
 
             // Transform API data to match your component format
             const transformedOffers = response.data.map(venue => {
-                // Helper function to get full image URL
+                // Helper function to get full image URL - FIXED BUGGY CONSTRUCTION
                 const getFullImageUrl = (imagePath) => {
                     if (!imagePath) return 'https://via.placeholder.com/400x250?text=No+Image';
                     if (imagePath.startsWith('http')) return imagePath;
@@ -121,7 +121,7 @@ const DashboardOffers = ({ handleBookNow }) => {
     if (loading) {
         return (
             <div className="tab-content active">
-                {/* HEADER WITH TITLE AND SEARCH IN ONE ROW */}
+                {/* HEADER WITH TITLE AND SEARCH IN ONE ROW - UNIFIED LAYOUT */}
                 <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -177,7 +177,7 @@ const DashboardOffers = ({ handleBookNow }) => {
     if (error) {
         return (
             <div className="tab-content active">
-                {/* HEADER WITH TITLE AND SEARCH IN ONE ROW */}
+                {/* HEADER WITH TITLE AND SEARCH IN ONE ROW - UNIFIED LAYOUT */}
                 <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -257,7 +257,7 @@ const DashboardOffers = ({ handleBookNow }) => {
 
     return (
         <div className="tab-content active">
-            {/* HEADER WITH TITLE AND SEARCH IN ONE ROW */}
+            {/* HEADER WITH TITLE AND SEARCH IN ONE ROW - UNIFIED LAYOUT */}
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
